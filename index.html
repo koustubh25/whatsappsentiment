@@ -1,0 +1,70 @@
+<html>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+
+<div id="container" style="width:100%; height:400px;"></div>
+
+<script>
+
+    function httpGet(theUrl)
+    {
+        var xmlHttp = new XMLHttpRequest();
+        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+        xmlHttp.send( null );
+        console.log(xmlHttp.responseText);
+        return xmlHttp.responseText;
+    }
+
+    var data = JSON.parse(httpGet('http://localhost:8082'))
+
+    Highcharts.chart('container', {
+
+        chart: {
+            type: 'column'
+        },
+
+        title: {
+            text: 'Sentiment Analaysis of Whatsapp chat (28th March)'
+        },
+
+        xAxis: {
+            categories: ['Koustubh', 'Tanmayi']
+        },
+
+        yAxis: {
+            allowDecimals: false,
+            min: 0,
+            title: {
+                text: 'Sentiment score'
+            }
+        },
+
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.x + '</b><br/>' +
+                        this.series.name + ': ' + this.y + '<br/>' +
+                        'Total: ' + this.point.stackTotal;
+            }
+        },
+
+        plotOptions: {
+            column: {
+                stacking: 'normal'
+            }
+        },
+
+        series: [{
+            name: 'positive',
+            data: [data.person1.positive, data.person2.positive],
+            stack: 'male'
+        }, {
+            name: 'negative',
+            data: [data.person1.negative, data.person2.negative],
+            stack: 'male'
+        }]
+    });
+</script>
+
+<a href = "https://github.com/thinkroth/Sentimental">Algrithm here</a>
+
+</html>
